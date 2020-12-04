@@ -6,7 +6,7 @@ A js ~~library~~ static html page with ability to convert numbers to words in La
 ``` bash
 # Clone rep
 git clone git@github.com:aleksejs1/numtowords.git
-cp public [your www root directory]
+cp numtowords [your www root directory]
 ```
 ## Demo
 https://4m.lv
