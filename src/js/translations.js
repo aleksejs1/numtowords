@@ -111,6 +111,132 @@ var WordTranslations = function () {
         "9": "deviņdesmit"
     };
 
+    this.currencyRu = {
+        "eur": "евро",
+        "usd": "доллар",
+        "gbp": "Lielbritānijas mārciņa",
+        "rub": "Krievijas rublis",
+        "pln": "Polijas zlots",
+        "kzt": "Kazahstānas tenge",
+        "chf": "Šveices franks",
+        "aed": "Apvienoto Arābu Emirātu dirhams",
+        "dkk": "Dānijas krona",
+        "sek": "Zviedrijas krona",
+        "nok": "Norvēģijas krona",
+        "bgn": "Bulgārijas leva",
+        "huf": "Ungārijas forints",
+        "try": "Turcijas lira",
+        "all": "Albānijas leks",
+        "hrk": "Horvātijas kuna",
+        "czk": "Čehijas krona",
+        "gel": "Gruzijas lari",
+        "lkr": "Šrilankas rūpija",
+        "tnd": "Tunisijas dinārs",
+        "ils": "Izraēlas šekels",
+        "jod": "Jordānijas dinārs",
+        "byn": "Baltkrievijas rublis",
+        "egp": "Ēģiptes mārciņa",
+        "uah": "Ukrainas grivna",
+        "cny": "Ķīnas juaņa",
+        "thb": "Taizemes bats",
+        "vnd": "Vjetnamas dongs",
+        "php": "Filipīnu peso",
+        "mad": "Marokas dirhams",
+        "aud": "Austrālijas dolārs",
+        "ars": "Argentīnas peso",
+        "jpy": "Japānas jēna",
+        "idr": "Indonēzijas rūpija",
+        "isk": "Islandes krona",
+        "amd": "Armēnijas drams",
+        "ron": "Rumānijas leja",
+        "sgd": "Singapūras dolārs",
+        "sbp": "Skotijas mārciņa",
+        "cad": "Kanādas dolārs",
+        "brl": "Brazīlijas reāls",
+        "zar": "Dienvidāfrikas rends",
+        "inr": "Indijas rūpija",
+        "rsd": "Serbijas dinārs",
+        "nzd": "Jaunzēlandes dolārs",
+        "myr": "Malaizijas ringits",
+        "mur": "Maurīcijas salas rūpija",
+        "hkd": "Honkongas dolārs",
+        "krw": "Dienvidkorejas vona",
+        "mxn": "Meksikas peso",
+        "mkd": "Maķedonijas denārs",
+        "dop": "Dominikānas peso",
+        "kes": "Kenijas šiliņš",
+        "dem": "Vācijas marka",
+        "eek": "Igaunijas krona",
+        "ltl": "Lietuvas lits",
+        "lvl": "Latvijas lats",
+    };
+
+    this.hundredthsRu = {
+        'eur': 'центов',
+        'usd': 'центов',
+        'gbp': 'peni',
+        'rub': 'kapeikās',
+        'pln': 'groši',
+        'lvl': 'santimi',
+        'kzt': 'tijīni',
+        'chf': 'rapeni',
+        'aed': 'fili',
+        'dkk': 'ēri',
+        'sek': 'ēri',
+        'nok': 'ēri',
+    };
+
+    this.unitNamesRu = {
+        "0": "",
+        "1": "один",
+        "2": "два",
+        "3": "три",
+        "4": "четыре",
+        "5": "пять",
+        "6": "шесть",
+        "7": "семь",
+        "8": "восемь",
+        "9": "девять"
+    };
+
+    this.teenNamesRu = {
+        "10": "десять",
+        "11": "одинадцать",
+        "12": "двенадцать",
+        "13": "тренадцать",
+        "14": "четырнадцать",
+        "15": "пятнадцать",
+        "16": "шеснадцать",
+        "17": "семнадцать",
+        "18": "восемнадцать",
+        "19": "девятнадцать"
+    };
+
+    this.tennerNamesRu = {
+        "2": "двадцать",
+        "3": "тридцать",
+        "4": "сорок",
+        "5": "пяьдесят",
+        "6": "шестьдесят",
+        "7": "семьдесят",
+        "8": "восемьдесят",
+        "9": "девяносто"
+    };
+
+    this.hundredsNamesRu = {
+        "": "",
+        "0": "",
+        "1": "сто",
+        "2": "двести",
+        "3": "триста",
+        "4": "четыреста",
+        "5": "пятьсот",
+        "6": "шестьсот",
+        "7": "семьсот",
+        "8": "восемьсот",
+        "9": "девятьсот"
+    };
+
     this.currencyEn = {
         "eur": "euro",
         "usd": "dollar",
