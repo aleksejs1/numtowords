@@ -1,195 +1,21 @@
 import T2W from "numbers2words";
+import WordTranslations from "./translations";
 
 var NumToWords = function () {
     this.translator = new T2W("EN_US");
-
-    this.vals = {
-        "eur": "euro",
-        "usd": "dolārs",
-        "gbp": "Lielbritānijas mārciņa",
-        "rub": "Krievijas rublis",
-        "pln": "Polijas zlots",
-        "kzt": "Kazahstānas tenge",
-        "chf": "Šveices franks",
-        "aed": "Apvienoto Arābu Emirātu dirhams",
-        "dkk": "Dānijas krona",
-        "sek": "Zviedrijas krona",
-        "nok": "Norvēģijas krona",
-        "bgn": "Bulgārijas leva",
-        "huf": "Ungārijas forints",
-        "try": "Turcijas lira",
-        "all": "Albānijas leks",
-        "hrk": "Horvātijas kuna",
-        "czk": "Čehijas krona",
-        "gel": "Gruzijas lari",
-        "lkr": "Šrilankas rūpija",
-        "tnd": "Tunisijas dinārs",
-        "ils": "Izraēlas šekels",
-        "jod": "Jordānijas dinārs",
-        "byn": "Baltkrievijas rublis",
-        "egp": "Ēģiptes mārciņa",
-        "uah": "Ukrainas grivna",
-        "cny": "Ķīnas juaņa",
-        "thb": "Taizemes bats",
-        "vnd": "Vjetnamas dongs",
-        "php": "Filipīnu peso",
-        "mad": "Marokas dirhams",
-        "aud": "Austrālijas dolārs",
-        "ars": "Argentīnas peso",
-        "jpy": "Japānas jēna",
-        "idr": "Indonēzijas rūpija",
-        "isk": "Islandes krona",
-        "amd": "Armēnijas drams",
-        "ron": "Rumānijas leja",
-        "sgd": "Singapūras dolārs",
-        "sbp": "Skotijas mārciņa",
-        "cad": "Kanādas dolārs",
-        "brl": "Brazīlijas reāls",
-        "zar": "Dienvidāfrikas rends",
-        "inr": "Indijas rūpija",
-        "rsd": "Serbijas dinārs",
-        "nzd": "Jaunzēlandes dolārs",
-        "myr": "Malaizijas ringits",
-        "mur": "Maurīcijas salas rūpija",
-        "hkd": "Honkongas dolārs",
-        "krw": "Dienvidkorejas vona",
-        "mxn": "Meksikas peso",
-        "mkd": "Maķedonijas denārs",
-        "dop": "Dominikānas peso",
-        "kes": "Kenijas šiliņš",
-        "dem": "Vācijas marka",
-        "eek": "Igaunijas krona",
-        "ltl": "Lietuvas lits",
-        "lvl": "Latvijas lats",
-    };
-
-    this.smLv = {
-        'eur': 'centi',
-        'usd': 'centi',
-        'gbp': 'peni',
-        'rub': 'kapeikās',
-        'pln': 'groši',
-        'lvl': 'santimi',
-        'kzt': 'tijīni',
-        'chf': 'rapeni',
-        'aed': 'fili',
-        'dkk': 'ēri',
-        'sek': 'ēri',
-        'nok': 'ēri',
-    };
-
-    this.valsEn = {
-        "eur": "euro",
-        "usd": "dollar",
-        "gbp": "british pound",
-        "rub": "russian ruble",
-        "pln": "polish zloty",
-        "bgn": "bulgarian lev",
-        "huf": "hungarian forint",
-        "try": "turkish lira",
-        "hrk": "croatian kuna",
-        "czk": "czech koruna",
-        "gel": "georgian lari",
-        "all": "albanian lek",
-        "lkr": "sri lankan rupee",
-        "sek": "swedish krona",
-        "thb": "thai baht",
-        "tnd": "tunisian dinar",
-        "ils": "israeli sheqel",
-        "chf": "swiss franc",
-        "nok": "norwegian krone",
-        "dkk": "danish krone",
-        "aed": "united arab emirates dirham",
-        "cad": "canadian dollar",
-        "byn": "belarusian new ruble",
-        "aud": "australian dollar",
-        "jpy": "japanese yen",
-        "cny": "chinese yuan",
-        "uah": "ukrainian hryvnia",
-        "isk": "iceland krona",
-        "nzd": "new zealand dollar",
-        "krw": "south korean won",
-        "ron": "romanian leu",
-        "sgd": "singapore dollar",
-        "idr": "indonesian rupiah",
-        "hkd": "hong kong dollar",
-        "sbp": "scottish pound",
-        "zar": "south african rand",
-        "mxn": "mexican peso",
-        "mkd": "macedonian dinar",
-        "brl": "brazilian real",
-        "egp": "egyptian pound",
-        "ars": "argentine peso",
-        "kes": "kenya shilling",
-        "myr": "malaysian ringgit",
-        "mur": "mauritian rupee",
-        "php": "philippine peso",
-        "inr": "indian rupee",
-        "kzt": "kazakhstan tenge",
-        "amd": "armenian dram",
-        "mad": "moroccan dirham",
-        "rsd": "serbian dinar",
-        "vnd": "vietnamese dong",
-        "dop": "dominican peso",
-        "jod": "jordanian dinar",
-        "lvl": "latvian lats",
-        "ltl": "lithuanian litas",
-        "eek": "estonian kroon",
-        "dem": "german mark",
-    };
-
-    this.smEn = {
-        'eur': 'cents',
-        'usd': 'cents',
-        'gbp': 'pence',
-        'rub': 'kopeks',
-        'pln': 'grosz',
-        'lvl': 'santims',
-        'kzt': 'tıyns',
-        'chf': 'rappens',
-        'aed': 'fils',
-        'dkk': 'ore',
-        'sek': 'ore',
-        'nok': 'ore',
-    };
+    this.translations = new WordTranslations();
 }
 
 NumToWords.prototype.getVals = function () {
-    return this.vals;
+    return this.translations.currencyLv;
 }
 
 NumToWords.prototype.units = function (numericUnit) {
-    const unitNames = {
-        "0": "",
-        "1": "viens",
-        "2": "divi",
-        "3": "trīs",
-        "4": "četri",
-        "5": "pieci",
-        "6": "seši",
-        "7": "septiņi",
-        "8": "astoņi",
-        "9": "deviņi"
-    };
-
-    return unitNames[numericUnit];
+    return this.translations.unitNamesLv[numericUnit];
 }
 
 NumToWords.prototype.teens = function (teens) {
-    var teenNames = {
-        "10": "desmit",
-        "11": "vienpadsmit",
-        "12": "divpadsmit",
-        "13": "trīspadsmit",
-        "14": "četrpadsmit",
-        "15": "piecpadsmit",
-        "16": "sešpadsmit",
-        "17": "septiņpadsmit",
-        "18": "astoņpadsmit",
-        "19": "deviņpadsmit"
-    };
-
-    return teenNames[teens];
+    return this.translations.teenNamesLv[teens];
 }
 
 NumToWords.prototype.tenners = function (numericTen) {
@@ -199,17 +25,8 @@ NumToWords.prototype.tenners = function (numericTen) {
     if (numericTen[0] === "1") {
         return this.teens(numericTen);
     }
-    var tennerNames = {
-        "2": "divdesmit",
-        "3": "trīsdesmit",
-        "4": "četrdesmit",
-        "5": "piecdesmit",
-        "6": "sešdesmit",
-        "7": "septiņdesmit",
-        "8": "astoņdesmit",
-        "9": "deviņdesmit"
-    };
-    return tennerNames[numericTen[0]] + " " + this.units(numericTen[1]);
+
+    return this.translations.tennerNamesLv[numericTen[0]] + " " + this.units(numericTen[1]);
 }
 
 NumToWords.prototype.hundreds = function (numericHundred) {
@@ -338,11 +155,11 @@ NumToWords.prototype.getFull = function (valuta, lang, num) {
     };
 
     if (lang === 'en') {
-        eden = this.valsEn;
-        sm = this.smEn;
+        eden = this.translations.currencyEn;
+        sm = this.translations.hundredthsEn;
     } else {
-        eden = this.vals;
-        sm = this.smLv;
+        eden = this.translations.currencyLv;
+        sm = this.translations.hundredthsLv;
     }
 
 
