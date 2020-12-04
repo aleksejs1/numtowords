@@ -1,6 +1,6 @@
 # numtowords
 
-A js ~~library~~ static html page with ability to convert numbers to words in Latvian and English with currencies.
+A js ~~library~~ static html page with ability to convert numbers to words in Latvian, Russian and English with currencies.
 
 ## Installation
 ``` bash

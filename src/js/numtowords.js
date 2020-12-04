@@ -4,6 +4,7 @@ import WordTranslations from "./translations";
 var NumToWords = function () {
     this.translator = new T2W("EN_US");
     this.translations = new WordTranslations();
+    this.lang = 'lv';
 }
 
 NumToWords.prototype.getVals = function () {
@@ -11,10 +12,18 @@ NumToWords.prototype.getVals = function () {
 }
 
 NumToWords.prototype.units = function (numericUnit) {
+    if (this.lang === 'ru') {
+        return this.translations.unitNamesRu[numericUnit];
+    }
+
     return this.translations.unitNamesLv[numericUnit];
 }
 
 NumToWords.prototype.teens = function (teens) {
+    if (this.lang === 'ru') {
+        return this.translations.teenNamesRu[teens];
+    }
+
     return this.translations.teenNamesLv[teens];
 }
 
@@ -26,10 +35,17 @@ NumToWords.prototype.tenners = function (numericTen) {
         return this.teens(numericTen);
     }
 
+    if (this.lang === 'ru') {
+        return this.translations.tennerNamesRu[numericTen[0]] + " " + this.units(numericTen[1]);
+    }
+
     return this.translations.tennerNamesLv[numericTen[0]] + " " + this.units(numericTen[1]);
 }
 
 NumToWords.prototype.hundreds = function (numericHundred) {
+    if (this.lang === 'ru') {
+        return this.translations.hundredsNamesRu[numericHundred[0]] + ' ' + this.tenners(numericHundred[1] + numericHundred[2]);
+    }
     if (numericHundred[0] === "0") {
         return this.tenners(numericHundred[1] + numericHundred[2]);
     }
@@ -60,26 +76,61 @@ NumToWords.prototype.uni = function (num, len, v1, vm, nfm) {
 }
 
 NumToWords.prototype.thousands = function (num) {
-    return this.uni(num, 6, 'tūkstotis', 'tūkstoši', 'hundreds');
+    if (this.lang === 'ru') {
+        var vl = 'тысяча';
+        var vm = 'тысяч';
+    } else {
+        var vl = 'tūkstotis';
+        var vm = 'tūkstoši';
+    }
+    return this.uni(num, 6, vl, vm, 'hundreds');
 }
 
 NumToWords.prototype.millions = function (num) {
-    return this.uni(num, 9, 'miljons', 'miljoni', 'thousands')
+    if (this.lang === 'ru') {
+        var vl = 'миллион';
+        var vm = 'миллионов';
+    } else {
+        var vl = 'miljons';
+        var vm = 'miljoni';
+    }
+    return this.uni(num, 9, vl, vm, 'thousands')
 }
 
 NumToWords.prototype.billions = function (num) {
-    return this.uni(num, 12, 'miljards', 'miljardi', 'millions');
+    if (this.lang === 'ru') {
+        var vl = 'миллиард';
+        var vm = 'миллиардов';
+    } else {
+        var vl = 'miljards';
+        var vm = 'miljardi';
+    }
+    return this.uni(num, 12, vl, vm, 'millions');
 }
 
 NumToWords.prototype.trillions = function (num) {
-    return this.uni(num, 15, 'triljons', 'triljoni', 'billions');
+    if (this.lang === 'ru') {
+        var vl = 'триллион';
+        var vm = 'тоиллионов';
+    } else {
+        var vl = 'triljons';
+        var vm = 'triljoni';
+    }
+    return this.uni(num, 15, vl, vm, 'billions');
 }
 
 NumToWords.prototype.quadrillions = function (num) {
-    return this.uni(num, 18, 'kvadriljons', 'kvadriljoni', 'trillions');
+    if (this.lang === 'ru') {
+        var vl = 'квадриллион';
+        var vm = 'квадриллионов';
+    } else {
+        var vl = 'kvadriljons';
+        var vm = 'kvadriljoni';
+    }
+    return this.uni(num, 18, vl, vm, 'trillions').trim();
 }
 
-NumToWords.prototype.getResult = function (num, cent, eur, lang) {
+NumToWords.prototype.getResult = function (num, cent, eur) {
     var point = num.lastIndexOf('.');
     var coma = num.lastIndexOf(',');
     var pointCount = (num.split(".").length - 1)
@@ -94,9 +145,12 @@ NumToWords.prototype.getResult = function (num, cent, eur, lang) {
     var length = num.length;
     var un = 'un'
     var comats = 'komats';
-    if (lang === 'en') {
+    if (this.lang === 'en') {
         un = 'and'
         comats = 'coma';
+    } else if (this.lang === 'ru') {
+        un = 'и'
+        comats = 'кома';
     }
     var centi = ' '+un+' 00 ' + cent;
     if (sep !== -1) {
@@ -119,11 +173,17 @@ NumToWords.prototype.getResult = function (num, cent, eur, lang) {
     var orig = num;
     num = num.replace(/[^0-9]/g, "")
 
-    if (lang === 'en') {
+    if (this.lang === 'en') {
         try {
             num = this.translator.toWords(Number(num));
         } catch(e) {
             num = 'A lot of';
+        }
+    } else if (this.lang === 'ru') {
+        num = '0'.repeat(18 - num.length) + num;
+        num = this.quadrillions(num);
+        if (num === '') {
+            num = 'ноль';
         }
     } else {
         num = '0'.repeat(18 - num.length) + num;
@@ -133,7 +193,7 @@ NumToWords.prototype.getResult = function (num, cent, eur, lang) {
         }
     }
 
-    if (lang === 'lv') {
+    if (this.lang === 'lv') {
         if ((orig.length > 1 && orig[orig.length-1] === "1" && orig[orig.length-2] !== "1") || orig === "1") {
         } else {
             if (eur[eur.length-1] != "o" && eur[eur.length-1] != "e") {
@@ -142,6 +202,20 @@ NumToWords.prototype.getResult = function (num, cent, eur, lang) {
             if (eur[eur.length-2] === "i") {
                 eur = eur.substring(0, eur.length - 1);
             }
+            if (eur[eur.length-1] == "р") {
+                eur = eur.substring(0, eur.length - 1) + 'ров';
+            }
+        }
+    } else if (this.lang === 'ru') {
+        if ((orig.length > 1 && orig[orig.length-1] === "1" && orig[orig.length-2] !== "1") || orig === "1") {
+        } else if ((orig.length > 1 && (orig[orig.length-1] === "2" || orig[orig.length-1] === "3" || orig[orig.length-1] === "4") && orig[orig.length-2] !== "1") || orig === "1") {
+            if (eur[eur.length-1] == "р") {
+                eur = eur + 'а';
+            }
+        } else {
+            if (eur[eur.length-1] == "р") {
+                eur = eur + 'ов';
+            }
         }
     }
 
@@ -149,14 +223,18 @@ NumToWords.prototype.getResult = function (num, cent, eur, lang) {
 }
 
 NumToWords.prototype.getFull = function (valuta, lang, num) {
+    this.lang = lang;
     var eden = {
     };
     var sm = {
     };
 
-    if (lang === 'en') {
+    if (this.lang === 'en') {
         eden = this.translations.currencyEn;
         sm = this.translations.hundredthsEn;
+    } else if (this.lang === 'ru') {
+        eden = this.translations.currencyRu;
+        sm = this.translations.hundredthsRu;
     } else {
         eden = this.translations.currencyLv;
         sm = this.translations.hundredthsLv;
@@ -167,8 +245,7 @@ NumToWords.prototype.getFull = function (valuta, lang, num) {
     if (hasOwnProperty.call(sm, valuta)) {
         smres = sm[valuta];
     }
-
-    var res = this.getResult(num, smres, eden[valuta], lang);
+    var res = this.getResult(num, smres, eden[valuta]);
     res = res.charAt(0).toUpperCase() + res.slice(1);
 
     return res;
