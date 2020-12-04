@@ -5,6 +5,9 @@
         "/build/runtime.js",
         "/build/vendors~app.js",
         "/build/app.js"
+      ],
+      "css": [
+        "/build/app.css"
       ]
     }
   }

@@ -1,3 +1,5 @@
+import '../css/app.scss';
+import 'bootstrap'
 import $ from "jquery";
 import NumToWords from "./numtowords";
 
