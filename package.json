@@ -1,4 +1,15 @@
 {
+    "name": "numtowords",
+    "description": "Converting numbers to words in Latvian and English",
+    "version": "0.5",
+    "bugs": {
+        "url": "https://github.com/aleksejs1/numtowords/issues"
+    },
+    "keywords": ["number", "word", "converter", "latvian"],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/aleksejs1/numtowords.git"
+    },
     "devDependencies": {
         "@symfony/webpack-encore": "^0.30.0",
         "bootstrap": "^4.5.2",
@@ -11,8 +22,7 @@
         "sass-loader": "8.0.0",
         "webpack-notifier": "^1.6.0"
     },
-    "license": "UNLICENSED",
-    "private": true,
+    "license": "MIT",
     "scripts": {
         "dev-server": "encore dev-server",
         "dev": "encore dev",
