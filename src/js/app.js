@@ -11,6 +11,8 @@ function updateAll() {
     var num = $("#c").val();
     var res = numtowords.getFull(currency, lang, num);
     $("#res").html(res);
+    localStorage.setItem('convert_lang', lang);
+    localStorage.setItem('convert_currency', currency);
 }
 
 function copy() {
@@ -40,3 +42,18 @@ for (var key in vals) {
     sel = sel + '<option value="'+key+'">'+key.toUpperCase()+' '+vala+'</option>';
 };
 $("#valuta").html(sel);
+var lang = localStorage.getItem('convert_lang');
+if (lang !== undefined) {
+    var langVals = {
+        'lv': 0,
+        'en': 1,
+        'ru': 2
+    };
+
+    $('input:radio[name="lang"]')[langVals[lang]].checked = true;
+    $('input[name="lang"]:checked').val();
+}
+var currency = localStorage.getItem('convert_currency');
+if (currency !== undefined) {
+    $("#valuta").val(currency);
+}
