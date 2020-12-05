@@ -202,19 +202,25 @@ NumToWords.prototype.getResult = function (num, cent, eur) {
             if (eur[eur.length-2] === "i") {
                 eur = eur.substring(0, eur.length - 1);
             }
-            if (eur[eur.length-1] == "р") {
+            if (eur[eur.length-1] === "р") {
                 eur = eur.substring(0, eur.length - 1) + 'ров';
             }
         }
     } else if (this.lang === 'ru') {
         if ((orig.length > 1 && orig[orig.length-1] === "1" && orig[orig.length-2] !== "1") || orig === "1") {
         } else if ((orig.length > 1 && (orig[orig.length-1] === "2" || orig[orig.length-1] === "3" || orig[orig.length-1] === "4") && orig[orig.length-2] !== "1") || orig === "1") {
-            if (eur[eur.length-1] == "р") {
+            if (eur[eur.length-1] === "р" || eur[eur.length-1] === "т" || eur[eur.length-1] === "к") {
                 eur = eur + 'а';
             }
+            if (eur[eur.length-1] === "ь") {
+                eur = eur.substring(0, eur.length - 1) + 'я';
+            }
         } else {
-            if (eur[eur.length-1] == "р") {
+            if (eur[eur.length-1] === "р" || eur[eur.length-1] === "т" || eur[eur.length-1] === "к") {
                 eur = eur + 'ов';
+            }
+            if (eur[eur.length-1] === "ь") {
+                eur = eur + 'ей';
             }
         }
     }
