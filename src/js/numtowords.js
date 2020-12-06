@@ -12,19 +12,7 @@ NumToWords.prototype.getVals = function () {
 }
 
 NumToWords.prototype.units = function (numericUnit) {
-    if (this.lang === 'ru') {
-        return this.translations.unitNamesRu[numericUnit];
-    }
-
-    return this.translations.unitNamesLv[numericUnit];
-}
-
-NumToWords.prototype.teens = function (teens) {
-    if (this.lang === 'ru') {
-        return this.translations.teenNamesRu[teens];
-    }
-
-    return this.translations.teenNamesLv[teens];
+    return this.translations.numConf.units[this.lang][numericUnit]
 }
 
 NumToWords.prototype.tenners = function (numericTen) {
@@ -32,102 +20,49 @@ NumToWords.prototype.tenners = function (numericTen) {
         return this.units(numericTen[1]);
     }
     if (numericTen[0] === "1") {
-        return this.teens(numericTen);
+        return this.translations.numConf.teens[this.lang][numericTen]
     }
 
-    if (this.lang === 'ru') {
-        return this.translations.tennerNamesRu[numericTen[0]] + " " + this.units(numericTen[1]);
-    }
-
-    return this.translations.tennerNamesLv[numericTen[0]] + " " + this.units(numericTen[1]);
+    return this.translations.numConf.tenners[this.lang][numericTen[0]] + " " + this.units(numericTen[1])
 }
 
 NumToWords.prototype.hundreds = function (numericHundred) {
     if (this.lang === 'ru') {
-        return this.translations.hundredsNamesRu[numericHundred[0]] + ' ' + this.tenners(numericHundred[1] + numericHundred[2]);
+        return this.translations.numConf.hundreds.ru[numericHundred[0]] + ' ' + this.tenners(numericHundred[1] + numericHundred[2]);
     }
     if (numericHundred[0] === "0") {
         return this.tenners(numericHundred[1] + numericHundred[2]);
     }
     if (numericHundred[0] === "1") {
-        return 'viens simts' + ' ' + this.tenners(numericHundred[1] + numericHundred[2]);
+        return this.translations.oneHundredLv + ' ' + this.tenners(numericHundred[1] + numericHundred[2]);
     }
-    return this.units(numericHundred[0]) + ' simti ' + this.tenners(numericHundred[1] + numericHundred[2]);
+    return this.units(numericHundred[0]) + ' ' + this.translations.hundrads + ' ' + this.tenners(numericHundred[1] + numericHundred[2]);
 }
 NumToWords.prototype.genericCaller = function(methodName) {
-    var args = [].slice.call(arguments);  //converts arguments to an array
-    args.shift(); //remove the method name
-    return this[methodName].apply(this, args);  //call your method with the current scope and pass the arguments
+    var args = [].slice.call(arguments);
+    args.shift();
+    return this[methodName].apply(this, args);
 };
 
-NumToWords.prototype.uni = function (num, len, v1, vm, nfm) {
+NumToWords.prototype.uni = function (num, len) {
+    if (len === 3) {
+        return this.genericCaller('hundreds', num);
+    }
+    var v1 = this.translations.bigNums[(len - 3).toString()][this.lang][0]
+    var vm = this.translations.bigNums[(len - 3).toString()][this.lang][1]
+
     var milioni = num.substring(0, 3);
     var thousandsci = num.substring(3, len);
 
     if (milioni === '000') {
-        return this.genericCaller(nfm,thousandsci);
+        return this.genericCaller('uni', thousandsci, len-3);
     }
 
     var miljWord = vm;
     if (milioni[2] === "1" && milioni[1] !== "1") {
         miljWord = v1
     }
-    return this.hundreds(milioni) + ' '+miljWord+' ' + this.genericCaller(nfm,thousandsci);
-}
-
-NumToWords.prototype.thousands = function (num) {
-    if (this.lang === 'ru') {
-        var vl = 'тысяча';
-        var vm = 'тысяч';
-    } else {
-        var vl = 'tūkstotis';
-        var vm = 'tūkstoši';
-    }
-    return this.uni(num, 6, vl, vm, 'hundreds');
-}
-
-NumToWords.prototype.millions = function (num) {
-    if (this.lang === 'ru') {
-        var vl = 'миллион';
-        var vm = 'миллионов';
-    } else {
-        var vl = 'miljons';
-        var vm = 'miljoni';
-    }
-    return this.uni(num, 9, vl, vm, 'thousands')
-}
-
-NumToWords.prototype.billions = function (num) {
-    if (this.lang === 'ru') {
-        var vl = 'миллиард';
-        var vm = 'миллиардов';
-    } else {
-        var vl = 'miljards';
-        var vm = 'miljardi';
-    }
-    return this.uni(num, 12, vl, vm, 'millions');
-}
-
-NumToWords.prototype.trillions = function (num) {
-    if (this.lang === 'ru') {
-        var vl = 'триллион';
-        var vm = 'тоиллионов';
-    } else {
-        var vl = 'triljons';
-        var vm = 'triljoni';
-    }
-    return this.uni(num, 15, vl, vm, 'billions');
-}
-
-NumToWords.prototype.quadrillions = function (num) {
-    if (this.lang === 'ru') {
-        var vl = 'квадриллион';
-        var vm = 'квадриллионов';
-    } else {
-        var vl = 'kvadriljons';
-        var vm = 'kvadriljoni';
-    }
-    return this.uni(num, 18, vl, vm, 'trillions').trim();
+    return this.hundreds(milioni) + ' '+miljWord+' ' + this.genericCaller('uni', thousandsci, len-3);
 }
 
 NumToWords.prototype.getResult = function (num, cent, eur) {
@@ -143,15 +78,8 @@ NumToWords.prototype.getResult = function (num, cent, eur) {
     }
 
     var length = num.length;
-    var un = 'un'
-    var comats = 'komats';
-    if (this.lang === 'en') {
-        un = 'and'
-        comats = 'coma';
-    } else if (this.lang === 'ru') {
-        un = 'и'
-        comats = 'кома';
-    }
+    var un = this.translations.ands[this.lang];
+    var comats = this.translations.comats[this.lang];
     var centi = ' '+un+' 00 ' + cent;
     if (sep !== -1) {
         centi = num.substring(sep+1, length);
@@ -179,17 +107,11 @@ NumToWords.prototype.getResult = function (num, cent, eur) {
         } catch(e) {
             num = 'A lot of';
         }
-    } else if (this.lang === 'ru') {
-        num = '0'.repeat(18 - num.length) + num;
-        num = this.quadrillions(num);
-        if (num === '') {
-            num = 'ноль';
-        }
     } else {
         num = '0'.repeat(18 - num.length) + num;
-        num = this.quadrillions(num);
+        num = this.uni(num, 18).trim();
         if (num === '') {
-            num = 'nulle';
+            num = this.translations.nulle[this.lang];
         }
     }
 
