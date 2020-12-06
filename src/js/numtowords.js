@@ -207,25 +207,61 @@ NumToWords.prototype.getResult = function (num, cent, eur) {
             }
         }
     } else if (this.lang === 'ru') {
-        if ((orig.length > 1 && orig[orig.length-1] === "1" && orig[orig.length-2] !== "1") || orig === "1") {
-        } else if ((orig.length > 1 && (orig[orig.length-1] === "2" || orig[orig.length-1] === "3" || orig[orig.length-1] === "4") && orig[orig.length-2] !== "1") || orig === "1") {
-            if (eur[eur.length-1] === "р" || eur[eur.length-1] === "т" || eur[eur.length-1] === "к") {
-                eur = eur + 'а';
-            }
-            if (eur[eur.length-1] === "ь") {
-                eur = eur.substring(0, eur.length - 1) + 'я';
-            }
-        } else {
-            if (eur[eur.length-1] === "р" || eur[eur.length-1] === "т" || eur[eur.length-1] === "к") {
-                eur = eur + 'ов';
-            }
-            if (eur[eur.length-1] === "ь") {
-                eur = eur + 'ей';
-            }
+        var elements = eur.split(' ');
+        if (elements.length === 1) {
+            eur = this.endingsRu(orig, eur);
+        } else if (elements.length === 2) {
+            eur = this.endingsRu(orig, elements[0]) + ' ' + this.endingsRu(orig, elements[1]);
+        } else if (elements.length === 3) {
+            eur = this.endingsRu(orig, elements[0]) + ' ' + elements[1] + ' ' + this.endingsRu(orig, elements[2]);
         }
     }
 
     return num + ' ' + eur.toLowerCase() + centi;
+}
+NumToWords.prototype.endingsRu = function (number, currency) {
+    if ((number.length > 1 && number[number.length-1] === "1" && number[number.length-2] !== "1") || number === "1") {
+    } else if ((number.length > 1 && (number[number.length-1] === "2" || number[number.length-1] === "3" || number[number.length-1] === "4") && number[number.length-2] !== "1") || number === "1") {
+        if (currency[currency.length-1] === "р" || currency[currency.length-1] === "т" || currency[currency.length-1] === "к") {
+            currency = currency + 'а';
+        } else
+        if (currency[currency.length-1] === "ь") {
+            currency = currency.substring(0, currency.length - 1) + 'я';
+        } else
+        if (currency[currency.length-1] === "й" && currency[currency.length-2] === "и") {
+            currency = currency.substring(0, currency.length - 2) + 'их';
+        } else
+        if (currency[currency.length-1] === "й" && currency[currency.length-2] === "ы") {
+            currency = currency.substring(0, currency.length - 2) + 'ых';
+        } else
+        if (currency[currency.length-1] === "я" && currency[currency.length-2] === "а") {
+            currency = currency.substring(0, currency.length - 2) + 'ие';
+        } else
+        if (currency[currency.length-1] === "а") {
+            currency = currency.substring(0, currency.length - 1) + 'ы';
+        }
+    } else {
+        if (currency[currency.length-1] === "р" || currency[currency.length-1] === "т" || currency[currency.length-1] === "к") {
+            currency = currency + 'ов';
+        } else
+        if (currency[currency.length-1] === "ь") {
+            currency = currency + 'ей';
+        } else
+        if (currency[currency.length-1] === "й" && currency[currency.length-2] === "и") {
+            currency = currency.substring(0, currency.length - 2) + 'их';
+        } else
+        if (currency[currency.length-1] === "й" && currency[currency.length-2] === "ы") {
+            currency = currency.substring(0, currency.length - 2) + 'ых';
+        } else
+        if (currency[currency.length-1] === "я" && currency[currency.length-2] === "а") {
+            currency = currency.substring(0, currency.length - 2) + 'их';
+        } else
+        if (currency[currency.length-1] === "а") {
+            currency = currency.substring(0, currency.length - 1);
+        }
+    }
+
+    return currency;
 }
 
 NumToWords.prototype.getFull = function (valuta, lang, num) {
