@@ -11,32 +11,39 @@ NumToWords.prototype.getVals = function () {
     return this.translations.currencyLv;
 }
 
-NumToWords.prototype.units = function (numericUnit) {
+NumToWords.prototype.units = function (numericUnit, plural = 0) {
+    if (Array.isArray(this.translations.numConf.units[this.lang][numericUnit])) {
+        return this.translations.numConf.units[this.lang][numericUnit][plural]
+    }
     return this.translations.numConf.units[this.lang][numericUnit]
 }
 
-NumToWords.prototype.tenners = function (numericTen) {
+NumToWords.prototype.tenners = function (numericTen, sex = true) {
+    var plural = 1;
+    if (sex) {
+        plural = 0;
+    }
     if (numericTen[0] === "0") {
-        return this.units(numericTen[1]);
+        return this.units(numericTen[1], plural);
     }
     if (numericTen[0] === "1") {
         return this.translations.numConf.teens[this.lang][numericTen]
     }
 
-    return this.translations.numConf.tenners[this.lang][numericTen[0]] + " " + this.units(numericTen[1])
+    return this.translations.numConf.tenners[this.lang][numericTen[0]] + " " + this.units(numericTen[1], plural)
 }
 
-NumToWords.prototype.hundreds = function (numericHundred) {
+NumToWords.prototype.hundreds = function (numericHundred, sex = true) {
     if (this.lang === 'ru') {
-        return this.translations.numConf.hundreds.ru[numericHundred[0]] + ' ' + this.tenners(numericHundred[1] + numericHundred[2]);
+        return this.translations.numConf.hundreds.ru[numericHundred[0]] + ' ' + this.tenners(numericHundred[1] + numericHundred[2], sex);
     }
     if (numericHundred[0] === "0") {
-        return this.tenners(numericHundred[1] + numericHundred[2]);
+        return this.tenners(numericHundred[1] + numericHundred[2], sex);
     }
     if (numericHundred[0] === "1") {
         return this.translations.oneHundredLv + ' ' + this.tenners(numericHundred[1] + numericHundred[2]);
     }
-    return this.units(numericHundred[0]) + ' ' + this.translations.hundrads + ' ' + this.tenners(numericHundred[1] + numericHundred[2]);
+    return this.units(numericHundred[0]) + ' ' + this.translations.hundrads + ' ' + this.tenners(numericHundred[1] + numericHundred[2], sex);
 }
 NumToWords.prototype.genericCaller = function(methodName) {
     var args = [].slice.call(arguments);
@@ -44,28 +51,28 @@ NumToWords.prototype.genericCaller = function(methodName) {
     return this[methodName].apply(this, args);
 };
 
-NumToWords.prototype.uni = function (num, len) {
+NumToWords.prototype.uni = function (num, len, sex = 'he') {
     if (len === 3) {
-        return this.genericCaller('hundreds', num);
+        return this.genericCaller('hundreds', num, sex === 'he');
     }
-    var v1 = this.translations.bigNums[(len - 3).toString()][this.lang][0]
-    var vm = this.translations.bigNums[(len - 3).toString()][this.lang][1]
-
     var milioni = num.substring(0, 3);
     var thousandsci = num.substring(3, len);
 
     if (milioni === '000') {
-        return this.genericCaller('uni', thousandsci, len-3);
+        return this.genericCaller('uni', thousandsci, len-3, sex);
     }
 
-    var miljWord = vm;
+    var miljWord = this.translations.bigNums[(len - 3).toString()][this.lang][1];
     if (milioni[2] === "1" && milioni[1] !== "1") {
-        miljWord = v1
+        miljWord = this.translations.bigNums[(len - 3).toString()][this.lang][0]
     }
-    return this.hundreds(milioni) + ' '+miljWord+' ' + this.genericCaller('uni', thousandsci, len-3);
+    if (this.lang === 'ru' && milioni[1] !== "1" && (milioni[2] === "2" || milioni[2] === "3" || milioni[2] === "4")) {
+        miljWord = this.translations.bigNums[(len - 3).toString()][this.lang][2]
+    }
+    return this.hundreds(milioni, !(len >= 6 && len < 9)) + ' '+miljWord+' ' + this.genericCaller('uni', thousandsci, len-3, sex);
 }
 
-NumToWords.prototype.getResult = function (num, cent, eur) {
+NumToWords.prototype.getResult = function (num, cent, eur, sex = 'he') {
     var point = num.lastIndexOf('.');
     var coma = num.lastIndexOf(',');
     var pointCount = (num.split(".").length - 1)
@@ -109,7 +116,7 @@ NumToWords.prototype.getResult = function (num, cent, eur) {
         }
     } else {
         num = '0'.repeat(18 - num.length) + num;
-        num = this.uni(num, 18).trim();
+        num = this.uni(num, 18, sex).trim();
         if (num === '') {
             num = this.translations.nulle[this.lang];
         }
@@ -123,9 +130,6 @@ NumToWords.prototype.getResult = function (num, cent, eur) {
             }
             if (eur[eur.length-2] === "i") {
                 eur = eur.substring(0, eur.length - 1);
-            }
-            if (eur[eur.length-1] === "р") {
-                eur = eur.substring(0, eur.length - 1) + 'ров';
             }
         }
     } else if (this.lang === 'ru') {
@@ -144,7 +148,7 @@ NumToWords.prototype.getResult = function (num, cent, eur) {
 NumToWords.prototype.endingsRu = function (number, currency) {
     if ((number.length > 1 && number[number.length-1] === "1" && number[number.length-2] !== "1") || number === "1") {
     } else if ((number.length > 1 && (number[number.length-1] === "2" || number[number.length-1] === "3" || number[number.length-1] === "4") && number[number.length-2] !== "1") || number === "1") {
-        var endings = {'add':{"р": "а", "т": "а", "к": "а", "ам": "а"}, 'replace': {"ира": "иры", "ь": "я", "ский":"ские", "ий": "их", "ый": "а", "ая": "ие", "ф": "ы", "на": "ны"}};
+        var endings = {'add':{"р": "а", "т": "а", "к": "а", "ам": "а"}, 'replace': {"ира": "иры", "ь": "я", "ский":"ских", "ий": "их", "ый": "а", "ая": "ие", "ф": "ы", "на": "ны"}};
         for (var ending in endings['add']) {
             if (currency.substring(currency.length - ending.length) === ending) {
                 return currency + endings['add'][ending];
@@ -179,23 +183,25 @@ NumToWords.prototype.getFull = function (valuta, lang, num) {
     var sm = {
     };
 
+    var sex = 'he';
     if (this.lang === 'en') {
         eden = this.translations.currencyEn;
         sm = this.translations.hundredthsEn;
     } else if (this.lang === 'ru') {
         eden = this.translations.currencyRu;
         sm = this.translations.hundredthsRu;
+        sex = this.translations.curConf[valuta]['sex']['ru'];
     } else {
         eden = this.translations.currencyLv;
         sm = this.translations.hundredthsLv;
     }
 
-
+console.log(sex);
     var smres = '(1/100) ' + valuta.toUpperCase();
     if (hasOwnProperty.call(sm, valuta)) {
         smres = sm[valuta];
     }
-    var res = this.getResult(num, smres, eden[valuta]);
+    var res = this.getResult(num, smres, eden[valuta], sex);
     res = res.charAt(0).toUpperCase() + res.slice(1);
 
     return res;
