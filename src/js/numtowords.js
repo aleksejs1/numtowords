@@ -213,7 +213,7 @@ NumToWords.prototype.getResult = function (num, cent, eur) {
         } else if (elements.length === 2) {
             eur = this.endingsRu(orig, elements[0]) + ' ' + this.endingsRu(orig, elements[1]);
         } else if (elements.length === 3) {
-            eur = this.endingsRu(orig, elements[0]) + ' ' + elements[1] + ' ' + this.endingsRu(orig, elements[2]);
+            eur = this.endingsRu(orig, elements[0]) + ' ' + this.endingsRu(orig, elements[1]) + ' ' + elements[2];
         }
     }
 
@@ -222,42 +222,28 @@ NumToWords.prototype.getResult = function (num, cent, eur) {
 NumToWords.prototype.endingsRu = function (number, currency) {
     if ((number.length > 1 && number[number.length-1] === "1" && number[number.length-2] !== "1") || number === "1") {
     } else if ((number.length > 1 && (number[number.length-1] === "2" || number[number.length-1] === "3" || number[number.length-1] === "4") && number[number.length-2] !== "1") || number === "1") {
-        if (currency[currency.length-1] === "р" || currency[currency.length-1] === "т" || currency[currency.length-1] === "к") {
-            currency = currency + 'а';
-        } else
-        if (currency[currency.length-1] === "ь") {
-            currency = currency.substring(0, currency.length - 1) + 'я';
-        } else
-        if (currency[currency.length-1] === "й" && currency[currency.length-2] === "и") {
-            currency = currency.substring(0, currency.length - 2) + 'их';
-        } else
-        if (currency[currency.length-1] === "й" && currency[currency.length-2] === "ы") {
-            currency = currency.substring(0, currency.length - 2) + 'ых';
-        } else
-        if (currency[currency.length-1] === "я" && currency[currency.length-2] === "а") {
-            currency = currency.substring(0, currency.length - 2) + 'ие';
-        } else
-        if (currency[currency.length-1] === "а") {
-            currency = currency.substring(0, currency.length - 1) + 'ы';
+        var endings = {'add':{"р": "а", "т": "а", "к": "а", "ам": "а"}, 'replace': {"ира": "иры", "ь": "я", "ский":"ские", "ий": "их", "ый": "а", "ая": "ие", "ф": "ы", "на": "ны"}};
+        for (var ending in endings['add']) {
+            if (currency.substring(currency.length - ending.length) === ending) {
+                return currency + endings['add'][ending];
+            }
+        }
+        for (ending in endings['replace']) {
+            if (currency.substring(currency.length - ending.length) === ending) {
+                return currency.substring(0, currency.length - ending.length) + endings['replace'][ending];
+            }
         }
     } else {
-        if (currency[currency.length-1] === "р" || currency[currency.length-1] === "т" || currency[currency.length-1] === "к") {
-            currency = currency + 'ов';
-        } else
-        if (currency[currency.length-1] === "ь") {
-            currency = currency + 'ей';
-        } else
-        if (currency[currency.length-1] === "й" && currency[currency.length-2] === "и") {
-            currency = currency.substring(0, currency.length - 2) + 'их';
-        } else
-        if (currency[currency.length-1] === "й" && currency[currency.length-2] === "ы") {
-            currency = currency.substring(0, currency.length - 2) + 'ых';
-        } else
-        if (currency[currency.length-1] === "я" && currency[currency.length-2] === "а") {
-            currency = currency.substring(0, currency.length - 2) + 'их';
-        } else
-        if (currency[currency.length-1] === "а") {
-            currency = currency.substring(0, currency.length - 1);
+        var endings = {'add':{"р": "ов", "т": "ов", "к": "ов"}, 'replace': {"ь": "ей", "ий": "их", "ый": "ых", "ая": "их", "а": ""}};
+        for (var ending in endings['add']) {
+            if (currency.substring(currency.length - ending.length) === ending) {
+                return currency + endings['add'][ending];
+            }
+        }
+        for (ending in endings['replace']) {
+            if (currency.substring(currency.length - ending.length) === ending) {
+                return currency.substring(0, currency.length - ending.length) + endings['replace'][ending];
+            }
         }
     }
 
