@@ -89,18 +89,41 @@ NumToWords.prototype.getResult = function (num, cent, eur, sex = 'he') {
     var comats = this.translations.comats[this.lang];
     var centi = ' '+un+' 00 ' + cent;
     if (sep !== -1) {
+
         centi = num.substring(sep+1, length);
         centi = centi.replace(/[^0-9]/g, "")
         num = num.substring(0, sep);
+        var centi1 = '';
         if (centi.length === 0) {
-            centi = ' '+un+' 00 ' + cent;
-        } else if (centi.length == 1) {
-            centi = ' '+un+' '+centi+'0 ' + cent;
-        } else if (centi.length == 2) {
-            centi = ' '+un+' '+centi+' ' + cent;
+            centi1 = '00';
+        } else if (centi.length === 1) {
+            centi1 = centi+'0';
+        } else if (centi.length === 2) {
+            centi1 = centi;
         } else {
-            var centi1 = centi.substring(0,2);
+            centi1 = centi.substring(0,2);
+        }
+
+        if (Array.isArray(cent)) {
+            if (centi1[centi1.length-1] === "1" && centi1[centi1.length-2] !== "1") {
+                cent = cent[1];
+            } else if ((centi1[centi1.length-2] !== "1") && (centi1[centi1.length-1] === "2" || centi1[centi1.length-1] === "3" || centi1[centi1.length-1] === "4" )) {
+                cent = cent[2];
+            } else {
+                cent = cent[0];
+            }
+        }
+
+        num = num.substring(0, sep);
+        if (centi.length === 0) {
+            centi = ' '+un+' '+centi1+' ' + cent;
+        } else if (centi.length == 1) {
+            centi = ' '+un+' '+centi1+' ' + cent;
+        } else if (centi.length == 2) {
+            centi = ' '+un+' '+centi1+' ' + cent;
+        } else {
             var centi2 = centi.substring(2,centi.length);
+
             centi = ' '+un+' '+centi1 + ', ' + comats +', '+ centi2+' ' + cent;
         }
     }
@@ -196,7 +219,6 @@ NumToWords.prototype.getFull = function (valuta, lang, num) {
         sm = this.translations.hundredthsLv;
     }
 
-console.log(sex);
     var smres = '(1/100) ' + valuta.toUpperCase();
     if (hasOwnProperty.call(sm, valuta)) {
         smres = sm[valuta];
