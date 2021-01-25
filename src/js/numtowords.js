@@ -87,7 +87,11 @@ NumToWords.prototype.getResult = function (num, cent, eur, sex = 'he') {
     var length = num.length;
     var un = this.translations.ands[this.lang];
     var comats = this.translations.comats[this.lang];
-    var centi = ' '+un+' 00 ' + cent;
+    if (Array.isArray(cent)) {
+        var centi = ' '+un+' 00 ' + cent[0];
+    } else {
+        var centi = ' '+un+' 00 ' + cent;
+    }
     if (sep !== -1) {
 
         centi = num.substring(sep+1, length);
